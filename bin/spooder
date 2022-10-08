@@ -1,0 +1,51 @@
+#!/usr/bin/env lua
+
+if os.getenv("SPOODER_INIT") then
+	-- could be something like `sudo -K`
+	os.execute(os.getenv("SPOODER_INIT"))
+end
+
+local spooder = require 'spooder'
+local lumber = require 'lumber'
+
+local log = lumber.new {
+	format = require 'lumber.format.term';
+	level = lumber.levels.ERROR;
+}
+spooder.helper.log = log
+
+local params do
+	local arrr = require 'arrr'
+	local parser = arrr {
+		{ "List all tasks", "--tasks", "-T" };
+		{ "Changes the log level", "--log", "-L", "log level" };
+	}
+	params = parser{...}
+end
+
+if params.log then
+	log.level = lumber.levels[string.upper(params.log)]
+end
+
+require 'tasks'
+
+if params.tasks then
+	print("Listing tasks:")
+	for name, task in spooder.tasks() do
+		print("‣ "..name, task.description)
+	end
+	os.exit(0)
+end
+
+if #params == 0 then
+	log:fatal("Nothing to run")
+end
+
+xpcall(function()
+	for i, name in ipairs(params) do
+		spooder.run(name)
+	end
+end, function(error)
+	log:fatal(error)
+	log:debug(debug.traceback(error))
+end)

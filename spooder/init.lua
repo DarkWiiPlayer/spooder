@@ -37,8 +37,12 @@ local function run(stack, name, ...)
 	local task = tasks[name]
 	if task then
 		if task.depends then
-			for _, dependency in ipairs(task.depends) do
-				run(stack, dependency)
+			if type(task.depends) == "string" then
+				run(stack, task.depends)
+			else
+				for _, dependency in ipairs(task.depends) do
+					run(stack, dependency)
+				end
 			end
 		end
 		for _, runner in ipairs(task) do

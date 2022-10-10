@@ -14,14 +14,34 @@ local log = lumber.new {
 }
 spooder.helper.log = log
 
+local function printhelp(parser)
+	print('spooder [arguments] [tasks]')
+	local longest = 0
+	for _, param in ipairs(parser) do
+		longest = math.max(longest, #param.long)
+	end
+	for _, param in ipairs(parser) do
+		print(string.format("\t% "..longest.."s\t% 2s\t%s",
+			param.long or '',
+			param.short or '',
+			param.description
+		))
+	end
+end
+
 local params do
 	local arrr = require 'arrr'
 	local parser = arrr {
 		{ "List all tasks", "--tasks", "-T" };
 		{ "Load a specific task file", "--taskfile", "-t", "<module> or <script>.lua" };
 		{ "Changes the log level", "--log", "-L", "log level" };
+		{ "Prints help and quits", "--help", "-h" };
 	}
 	params = parser{...}
+	if params.help then
+		printhelp(parser)
+		os.exit()
+	end
 end
 
 if params.log then

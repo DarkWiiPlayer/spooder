@@ -80,7 +80,7 @@ if #params == 0 then
 end
 
 xpcall(function()
-	for i, name in ipairs(params) do
+	for _, name in ipairs(params) do
 		spooder.run(name)
 	end
 end, function(err)

@@ -40,6 +40,7 @@ local params do
 	params = parser{...}
 	if params.help then
 		printhelp(parser)
+		print("88w88")
 		os.exit()
 	end
 end

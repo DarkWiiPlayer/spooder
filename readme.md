@@ -1,12 +1,35 @@
-# Spooder
+# Spooder 88w88
 
-A cute little task runner for Lua
+A very basic task runner written in Lua
 
-## How it works
+## Features
 
-See the `tasks.lua` file in this repository for a basic example.
+- Modular
+- Runs tasks
+- Understands dependencies
+- Simple
 
-TODO: Write an actual explanation of what `tasks` files have to look like
+## Goals:
+
+Spooder aims to be:
+
+- Usable
+- Hackable
+- Free of clutter
+
+## Taskfiles
+
+Taskfiles are simple Lua modules that define tasks using the `spooder.task`
+function.
+
+	local spooder = require 'spooder'
+
+	spooder.task 'make_dir' {
+		description = "Creates a new directory";
+		function(helper)
+			helper.run("mkdir directory")
+		end;
+	}
 
 ## SPOODER\_INIT
 

@@ -18,6 +18,7 @@ local params do
 	local arrr = require 'arrr'
 	local parser = arrr {
 		{ "List all tasks", "--tasks", "-T" };
+		{ "Load a specific task file", "--taskfile", "-t", "<module> or <script>.lua" };
 		{ "Changes the log level", "--log", "-L", "log level" };
 	}
 	params = parser{...}
@@ -27,7 +28,24 @@ if params.log then
 	log.level = lumber.levels[string.upper(params.log)]
 end
 
-require 'tasks'
+do
+	local file if params.taskfile then
+		file = params.taskfile
+	else
+		file = 'tasks'
+	end
+	xpcall(function()
+		if file:find("%.lua$") then
+			dofile(file)
+		else
+			require(file)
+		end
+	end, function(err)
+		log:fatal("Failed loading task file: " .. err)
+		log:debug(debug.traceback(err))
+		os.exit()
+	end)
+end
 
 if params.tasks then
 	print("Listing tasks:")
@@ -38,14 +56,14 @@ if params.tasks then
 end
 
 if #params == 0 then
-	log:fatal("Nothing to run")
+	log:fatal("Nothing to run 88w88")
 end
 
 xpcall(function()
 	for i, name in ipairs(params) do
 		spooder.run(name)
 	end
-end, function(error)
-	log:fatal(error)
-	log:debug(debug.traceback(error))
+end, function(err)
+	log:fatal(err)
+	log:debug(debug.traceback(err))
 end)

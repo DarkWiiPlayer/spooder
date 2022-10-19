@@ -31,8 +31,8 @@
 
 <h2>Examples</h2>
 <ul class="nowrap">
-  <li><strong>tasks.lua</strong></li>
-  <li><a href="../examples/tasks.moon.html">tasks.moon</a></li>
+  <li><a href="../examples/tasks.lua.html">tasks.lua</a></li>
+  <li><strong>tasks.moon</strong></li>
 </ul>
 <h2>Modules</h2>
 <ul class="nowrap">
@@ -47,39 +47,37 @@
 
 <div id="content">
 
-    <h2>tasks.lua</h2>
+    <h2>tasks.moon</h2>
 <pre>
-<span class="keyword">local</span> spooder = <span class="global">require</span> <span class="string">'spooder'</span>
+<span class="comment">-- Example taskfile written in Yuescript
+</span><span class="comment">-- https://yuescript.org
+</span>
+import task from <span class="global">require</span> <span class="string">'spooder'</span>
 
-spooder.task <span class="string">"install"</span> {
-	description = <span class="string">"Installs the rock"</span>;
-	depends = {<span class="string">"test"</span>};
-	<span class="keyword">function</span>(helper)
-		helper.run(<span class="string">"luarocks make"</span>)
-	<span class="keyword">end</span>;
-}
+task <span class="string">"install"</span>
+	description: <span class="string">"Installs the rock"</span>
+	depends:
+		* <span class="string">"test"</span>
+	* (helper) -&gt; with helper
+		.run <span class="string">"luarocks make"</span>
 
-spooder.task <span class="string">"test"</span> {
-	description = <span class="string">"Runs tests"</span>;
-	<span class="keyword">function</span>(helper)
-		helper.run(<span class="string">[[
-			# rm luacov.stats.out
-			luacheck . || exit
-			# busted --coverage --lpath '?.lua' || exit
-			# luacov -r html spooder.lua
-		]]</span>)
-	<span class="keyword">end</span>
-}
+task <span class="string">"test"</span>
+	description: <span class="string">"Runs Tests"</span>
+	* (helper) -&gt; with helper
+		.run <span class="string">'rm luacov.stats.out'</span>
+		.run <span class="string">'luacheck .'</span>
+		.run <span class="string">'busted --coverage --lpath "?.lua;?/init.lua"'</span>
+		.run <span class="string">'luacov -r html spooder.lua'</span>
 
-spooder.task <span class="string">"documentation"</span> {
-	description = <span class="string">"Builds and pushes the documentation"</span>;
-	depends = { <span class="string">"test"</span>};
-	<span class="keyword">function</span>(helper)
-		helper.run(<span class="string">[[
+task <span class="string">"documentation"</span>
+	description: <span class="string">"Builds and pushes the documentation"</span>
+	depends:
+		* <span class="string">"test"</span>
+	* (helper) -&gt; with helper
+		.run <span class="string">[[
 			hash=$(git log -1 --format=%h)
-			# mkdir -p doc/coverage
-			# cp -r luacov-html/* doc/coverage
-			rm -r doc/*
+			mkdir -p doc/coverage
+			cp -r luacov-html/* doc/coverage
 			ldoc .
 			cd doc
 				find . | treh -c
@@ -91,9 +89,7 @@ spooder.task <span class="string">"documentation"</span> {
 				git push --force origin doc
 			cd ../
 			git stash pop || true
-		]]</span>)
-	<span class="keyword">end</span>;
-}</pre>
+		]]</span></pre>
 
 
 </div> <!-- id="content" -->

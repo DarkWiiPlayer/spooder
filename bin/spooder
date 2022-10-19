@@ -5,6 +5,14 @@ if os.getenv("SPOODER_INIT") then
 	os.execute(os.getenv("SPOODER_INIT"))
 end
 
+local function exit(...)
+	if os.getenv("SPOODER_CLEANUP") then
+		-- could be something like `sudo -K`
+		os.execute(os.getenv("SPOODER_CLEANUP"))
+	end
+	os.exit(...)
+end
+
 local spooder = require 'spooder'
 local lumber = require 'lumber'
 
@@ -41,7 +49,7 @@ local params do
 	if params.help then
 		printhelp(parser)
 		print("88w88")
-		os.exit()
+		exit()
 	end
 end
 
@@ -64,7 +72,7 @@ do
 	end, function(err)
 		log:fatal("Failed loading task file: " .. err)
 		log:debug(debug.traceback(err))
-		os.exit()
+		exit()
 	end)
 end
 
@@ -73,7 +81,7 @@ if params.tasks then
 	for name, task in spooder.tasks() do
 		print("‣ "..name, task.description)
 	end
-	os.exit(0)
+	exit(0)
 end
 
 if #params == 0 then

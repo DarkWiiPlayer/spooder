@@ -31,11 +31,15 @@ function.
 		end;
 	}
 
-## SPOODER\_INIT
+## Initialisation & Cleanup
 
-The `spooder` executable will look for this environment variable and, if found,
-run it as a shell command.
+The `spooder` executable will look for the `SPOODER_INIT` and `SPOODER_CLEANUP`
+variables and run their contents as shell scripts before and after running.
 
-It is recommended to set this to run `sudo -K` to reset the sudo credentials.
-This way, potential `sudo` commands inside spooder tasks won't run without
-asking for a password first.
+These variables can be used, for example, to compile task files written in
+moonscript and delete the resulting Lua files afterwards, or to clear the sudo
+password cache with `sudo -K` to make sure tasks never run as root without first
+asking for a password.
+
+Note that clearing the sudo cache should be thought of as a last line of
+defense; it won't make it "safe" to run untrusted code.

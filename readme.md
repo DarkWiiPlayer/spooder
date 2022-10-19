@@ -37,9 +37,11 @@ The `spooder` executable will look for the `SPOODER_INIT` and `SPOODER_CLEANUP`
 variables and run their contents as shell scripts before and after running.
 
 These variables can be used, for example, to compile task files written in
-moonscript and delete the resulting Lua files afterwards, or to clear the sudo
-password cache with `sudo -K` to make sure tasks never run as root without first
-asking for a password.
+moonscript and delete the resulting Lua files afterwards.
 
-Note that clearing the sudo cache should be thought of as a last line of
-defense; it won't make it "safe" to run untrusted code.
+For example, you can export the following environment variables
+
+	export SPOODER_INIT="yue tasks"
+	export SPOODER_CLEANUP="rm tasks.lua"
+
+and write your tasks in Yuescript instead of plain Lua.

@@ -26,9 +26,14 @@ function.
 
 	spooder.task 'make_dir' {
 		description = "Creates a new directory";
-		function(helper)
-			helper.run("mkdir directory")
-		end;
+		"mkdir directory"
+	}
+
+	spooder.task 'complex_stuff' {
+		description = "Does some advanced stuff";
+		if os.getenv("THE_STARS_ALIGn") == "yes" then
+			spooder.helper.run("echo yes.")
+		end
 	}
 
 ## Initialisation & Cleanup

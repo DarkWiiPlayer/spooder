@@ -8,7 +8,7 @@ function helper.run(command)
 	local success = os.execute(command)
 
 	if not success then
-		error("Task failed: '"..command.."'", 2)
+		error("Command failed: '"..command.."'", 2)
 	end
 end
 

@@ -61,7 +61,11 @@ local function run(stack, name, ...)
 			end
 		end
 		for _, runner in ipairs(task) do
-			runner(spooder.helper, ...)
+			if type(runner) == "string" then
+				spooder.helper.run(runner)
+			else
+				runner(spooder.helper, ...)
+			end
 		end
 		stack[name] = true
 		return true

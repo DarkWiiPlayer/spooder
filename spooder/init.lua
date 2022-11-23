@@ -35,9 +35,10 @@ function spooder.task(name, task)
 
 	if tasks[name] then
 		if spooder.helper.log then
-			spooder.helper.log:warn("Task ", name, " already exists")
+			spooder.helper.log:warn("Task ", name, " already exists, overwriting")
 		end
 	end
+	task.name = name
 	tasks[name] = task
 end
 
@@ -64,7 +65,7 @@ local function run(stack, name, ...)
 			if type(runner) == "string" then
 				spooder.helper.run(runner)
 			else
-				runner(spooder.helper, ...)
+				runner(task, ...)
 			end
 		end
 		stack[name] = true

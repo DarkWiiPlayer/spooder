@@ -22,14 +22,17 @@ Spooder aims to be:
 Taskfiles are simple Lua modules that define tasks using the `spooder.task`
 function.
 
-	local spooder = require 'spooder'
+	local spooder = require('spooder')
+	local task = spooder.task
 
-	spooder.task 'make_dir' {
+	-- task __index returns a task constructor
+	task.make_dir {
 		description = "Creates a new directory";
 		"mkdir directory"
 	}
 
-	spooder.task 'complex_stuff' {
+	-- task __call takes a string and also returns a task constructor
+	task "complex_stuff" {
 		description = "Does some advanced stuff";
 		if os.getenv("THE_STARS_ALIGn") == "yes" then
 			spooder.helper.run("echo yes.")

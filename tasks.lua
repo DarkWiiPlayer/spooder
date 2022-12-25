@@ -1,24 +1,19 @@
-local spooder = require 'spooder'
+local task = require 'spooder' .task
 
-spooder.task "install" {
+task.install {
 	description = "Installs the rock";
-	depends = {"test"};
+	depends = "test";
 	"luarocks make"
 }
 
-spooder.task "test" {
+task.test {
 	description = "Runs tests";
-	[[
-		# rm luacov.stats.out
-		luacheck . || exit
-		# busted --coverage --lpath '?.lua' || exit
-		# luacov -r html spooder.lua
-	]]
+	'luacheck .'
 }
 
-spooder.task "documentation" {
+task.documentation {
 	description = "Builds and pushes the documentation";
-	depends = { "test"};
+	depends = "test";
 	[[
 		hash=$(git log -1 --format=%h)
 		# mkdir -p doc/coverage

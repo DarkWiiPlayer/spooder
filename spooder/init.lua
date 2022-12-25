@@ -22,13 +22,7 @@ end
 --- Registers a new task
 -- @tparam string name The name of the new task
 -- @tparam task task A new task to insert with the given name
-function spooder.task(name, task)
-	if not task then
-		return function(task) -- luacheck: ignore
-			return spooder.task(name, task)
-		end
-	end
-
+function spooder.newtask(name, task)
 	if spooder.helper.log then
 		spooder.helper.log:debug("Adding task: ", name)
 	end
@@ -41,6 +35,17 @@ function spooder.task(name, task)
 	task.name = name
 	tasks[name] = task
 end
+
+spooder.task = setmetatable({}, {
+	__index = function(_, index)
+		return function(...)
+			return spooder.newtask(index, ...)
+		end
+	end;
+	__call = function(_, name, ...)
+		return spooder.newtask(name, ...)
+	end;
+})
 
 --- Runs a given task with provided arguments.
 local function run(stack, name, ...)

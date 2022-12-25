@@ -3,27 +3,23 @@
 
 import task from require 'spooder'
 
-task "install"
-	description: "Installs the rock"
-	depends:
-		* "test"
-	* (helper) -> with helper
-		.run "luarocks make"
+with task
+	.install
+		description: "Installs the rock"
+		depends: "test"
+		* "luarocks make"
 
-task "test"
-	description: "Runs Tests"
-	* (helper) -> with helper
-		.run 'rm luacov.stats.out'
-		.run 'luacheck .'
-		.run 'busted --coverage --lpath "?.lua;?/init.lua"'
-		.run 'luacov -r html spooder.lua'
+	.test
+		description: "Runs Tests"
+		* 'rm luacov.stats.out'
+		* 'luacheck .'
+		* 'busted --coverage --lpath "?.lua;?/init.lua"'
+		* 'luacov -r html spooder.lua'
 
-task "documentation"
-	description: "Builds and pushes the documentation"
-	depends:
-		* "test"
-	* (helper) -> with helper
-		.run [[
+	.documentation
+		description: "Builds and pushes the documentation"
+		depends: "test"
+		* [[
 			hash=$(git log -1 --format=%h)
 			mkdir -p doc/coverage
 			cp -r luacov-html/* doc/coverage

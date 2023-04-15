@@ -32,7 +32,7 @@ local function printhelp(parser)
 		print(string.format("\t% "..longest.."s\t% 2s\t%s",
 			param.long or '',
 			param.short or '',
-			param.description
+			param.description,
 		))
 	end
 end
@@ -79,7 +79,11 @@ end
 if params.tasks then
 	print("Listing tasks:")
 	for name, task in spooder.tasks() do
-		print("‣ "..name, task.description)
+		if task.description then
+			print("‣ "..name, task.description)
+		else
+			print("‣ "..name)
+		end
 	end
 	exit(0)
 end

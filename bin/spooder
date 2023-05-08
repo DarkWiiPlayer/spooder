@@ -32,7 +32,7 @@ local function printhelp(parser)
 		print(string.format("\t% "..longest.."s\t% 2s\t%s",
 			param.long or '',
 			param.short or '',
-			param.description,
+			param.description
 		))
 	end
 end

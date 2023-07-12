@@ -17,7 +17,6 @@ build = {
 	type = "builtin",
 	modules = {
 		spooder = "spooder/init.lua",
-		["spooder.helper"] = "spooder/helper.lua"
 	},
 	install = {
 		bin = {

@@ -3,9 +3,9 @@
 
 local spooder = {}
 
-spooder.helper = require 'spooder.helper'
-
 local tasks = {}
+
+local log = require 'lumber.global'
 
 --- Returns an iterator over all tasks
 function spooder.tasks()
@@ -23,14 +23,10 @@ end
 -- @tparam string name The name of the new task
 -- @tparam task task A new task to insert with the given name
 function spooder.newtask(name, task)
-	if spooder.helper.log then
-		spooder.helper.log:debug("Adding task: ", name)
-	end
+	log:debug("Adding task: ", name)
 
 	if tasks[name] then
-		if spooder.helper.log then
-			spooder.helper.log:warn("Task ", name, " already exists, overwriting")
-		end
+		log:warn("Task ", name, " already exists, overwriting")
 	end
 	task.name = name
 	tasks[name] = task
@@ -68,7 +64,10 @@ local function run(stack, name, ...)
 		end
 		for _, runner in ipairs(task) do
 			if type(runner) == "string" then
-				spooder.helper.run(runner)
+				local success = os.execute(runner)
+				if not success then
+					error("Command failed: '"..runner.."'", 2)
+				end
 			else
 				runner(task, ...)
 			end

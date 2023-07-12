@@ -14,13 +14,12 @@ local function exit(...)
 end
 
 local spooder = require 'spooder'
-local lumber = require 'lumber'
 
-local log = lumber.new {
+local lumber = require 'lumber'
+local log = require 'lumber.global' {
 	format = require 'lumber.format.term';
 	level = lumber.levels.ERROR;
 }
-spooder.helper.log = log
 
 local function printhelp(parser)
 	print('spooder [arguments] [tasks]')

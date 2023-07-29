@@ -5,6 +5,8 @@ if os.getenv("SPOODER_INIT") then
 	os.execute(os.getenv("SPOODER_INIT"))
 end
 
+local unpack = table.unpack
+
 local function exit(...)
 	if os.getenv("SPOODER_CLEANUP") then
 		-- could be something like `sudo -K`
@@ -40,6 +42,7 @@ local params do
 	local arrr = require 'arrr'
 	local parser = arrr {
 		{ "List all tasks", "--tasks", "-T" };
+		{ "Runs a task with arguments", "--task", nil, "*", repeatable = true };
 		{ "Load a specific task file", "--taskfile", "-t", "<module> or <script>.lua" };
 		{ "Changes the log level", "--log", "-L", "log level" };
 		{ "Prints help and quits", "--help", "-h" };
@@ -54,6 +57,18 @@ end
 
 if params.log then
 	log.level = lumber.levels[string.upper(params.log)]
+end
+
+if params.tasks then
+	print("Listing tasks:")
+	for name, task in spooder.tasks() do
+		if task.description then
+			print("‣ "..name, task.description)
+		else
+			print("‣ "..name)
+		end
+	end
+	exit(0)
 end
 
 do
@@ -75,25 +90,18 @@ do
 	end)
 end
 
-if params.tasks then
-	print("Listing tasks:")
-	for name, task in spooder.tasks() do
-		if task.description then
-			print("‣ "..name, task.description)
-		else
-			print("‣ "..name)
-		end
-	end
-	exit(0)
-end
-
 if #params == 0 then
-	log:fatal("Nothing to run 88w88")
+	log:info("Nothing to run 88w88")
 end
 
 xpcall(function()
 	for _, name in ipairs(params) do
 		spooder.run(name)
+	end
+	if params.task then
+		for _, task in ipairs(params.task) do
+			spooder.run(unpack(task))
+		end
 	end
 end, function(err)
 	log:fatal(err)

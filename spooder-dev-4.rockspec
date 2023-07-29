@@ -1,5 +1,5 @@
 package = "spooder"
-version = "dev-3"
+version = "dev-4"
 source = {
 	url = "git+https://github.com/darkwiiplayer/spooder"
 }
@@ -10,13 +10,13 @@ description = {
 }
 dependencies = {
 	"lua >= 5.1, ~> 5",
-	"arrr ~> 2",
+	"arrr ~> 3",
 	"lumber ~> 2.1"
 }
 build = {
 	type = "builtin",
 	modules = {
-		spooder = "spooder/init.lua",
+		spooder = "spooder/init.lua"
 	},
 	install = {
 		bin = {

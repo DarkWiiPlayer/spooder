@@ -23,18 +23,22 @@ local log = require 'lumber.global' {
 	level = lumber.levels.ERROR;
 }
 
-local function printhelp(parser)
-	print('spooder [arguments] [tasks]')
+local function printhelp(parser, file, message)
+	file = file or io.stdout
+	file:write('spooder [arguments] [tasks]', "\n")
 	local longest = 0
 	for _, param in ipairs(parser) do
 		longest = math.max(longest, #param.long)
 	end
 	for _, param in ipairs(parser) do
-		print(string.format("\t% "..longest.."s\t% 2s\t%s",
+		file:write(string.format("\t% "..longest.."s\t% 2s\t%s\n",
 			param.long or '',
 			param.short or '',
 			param.description
 		))
+	end
+	if message then
+		file:write(message, "\n")
 	end
 end
 
@@ -49,26 +53,15 @@ local params do
 	}
 	params = parser{...}
 	if params.help then
-		printhelp(parser)
-		print("88w88")
-		exit()
+		printhelp(parser, io.stdout, "88w88")
+	elseif not next(params) then
+		printhelp(parser, io.stderr, "»»~««")
+		os.exit(1)
 	end
 end
 
 if params.log then
 	log.level = lumber.levels[string.upper(params.log)]
-end
-
-if params.tasks then
-	print("Listing tasks:")
-	for name, task in spooder.tasks() do
-		if task.description then
-			print("‣ "..name, task.description)
-		else
-			print("‣ "..name)
-		end
-	end
-	exit(0)
 end
 
 do
@@ -88,6 +81,32 @@ do
 		log:debug(debug.traceback(err))
 		exit()
 	end)
+end
+
+if params.tasks then
+	print("Available tasks:")
+	local tasks = {}
+	for name, task in spooder.tasks() do
+		table.insert(tasks, name)
+		tasks[name] = task
+		table.sort(tasks)
+	end
+
+	local longest = 0
+	for _, name in ipairs(tasks) do
+		longest = math.max(longest, #name)
+	end
+	local format = "%"..(longest+1).."s "
+
+	for _, name in ipairs(tasks) do
+		local padded = format:format(name..":")
+		local task = tasks[name]
+		if task.description then
+			print(""..padded..task.description:gsub("\n", "\n"..string.rep(" ", longest+2)))
+		else
+			print(""..padded)
+		end
+	end
 end
 
 if #params == 0 then

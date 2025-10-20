@@ -31,7 +31,7 @@ local function printhelp(parser, file, message)
 		longest = math.max(longest, #param.long)
 	end
 	for _, param in ipairs(parser) do
-		file:write(string.format("\t% "..longest.."s\t% 2s\t%s\n",
+		file:write(string.format("\t%"..longest.."s\t% 2s\t%s\n",
 			param.long or '',
 			param.short or '',
 			param.description

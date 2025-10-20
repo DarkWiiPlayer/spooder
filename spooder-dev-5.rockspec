@@ -1,5 +1,5 @@
 package = "spooder"
-version = "dev-4"
+version = "dev-5"
 source = {
 	url = "git+https://github.com/darkwiiplayer/spooder"
 }
@@ -11,7 +11,7 @@ description = {
 dependencies = {
 	"lua >= 5.1, ~> 5",
 	"arrr ~> 3",
-	"lumber ~> 2.1"
+	"lumber ~> 2.2"
 }
 build = {
 	type = "builtin",

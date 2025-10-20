@@ -50,6 +50,21 @@ local function run(stack, name, ...)
 	elseif stack[name] == false then
 		error("Task Recursion") -- TODO: better error message or something
 	end
+	if not tasks[name] then
+		local list = {}
+		for key in pairs(tasks) do
+			if key:find(name) == 1 then
+				table.insert(list, key)
+			end
+		end
+
+		if #list == 1 then
+			log:info("Task name "..name.." expanded to "..list[1])
+			name = list[1]
+		elseif #list > 1 then
+			log:error("Name "..name.." matches several tasks: "..table.join(list, ", "))
+		end
+	end
 	stack[name] = false
 	local task = tasks[name]
 	if task then

@@ -79,11 +79,13 @@ local function run(stack, name, ...)
 		end
 		for _, runner in ipairs(task) do
 			if type(runner) == "string" then
+				log:debug("Running command: "..runner)
 				local success = os.execute(runner)
 				if not success then
 					error("Command failed: '"..runner.."'", 2)
 				end
 			else
+				-- TODO: print source location of the function
 				runner(task, ...)
 			end
 		end

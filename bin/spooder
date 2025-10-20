@@ -48,7 +48,7 @@ local params do
 		{ "List all tasks", "--tasks", "-T" };
 		{ "Runs a task with arguments", "--task", nil, "*", repeatable = true };
 		{ "Load a specific task file", "--taskfile", "-t", "<module> or <script>.lua" };
-		{ "Changes the log level", "--log", "-L", "log level" };
+		{ "Changes the log level", "--log", "-L", true };
 		{ "Prints help and quits", "--help", "-h" };
 	}
 	params = parser{...}
@@ -107,10 +107,6 @@ if params.tasks then
 			print(""..padded)
 		end
 	end
-end
-
-if #params == 0 then
-	log:info("Nothing to run 88w88")
 end
 
 xpcall(function()
